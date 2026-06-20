@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Logic & Utilities Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --container-bg: #ffffff;
+            --primary-color: #2b6cb0;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --code-bg: #1a202c;
+            --code-text: #edf2f7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+
+        p.subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .project-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .project-header {
+            background-color: #edf2f7;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .project-header:hover {
+            background-color: #e2e8f0;
+        }
+
+        .project-content {
+            display: none;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .project-content.active {
+            display: block;
+        }
+
+        .meta-info {
+            font-style: italic;
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: "Fira Code", Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .arrow {
+            transition: transform 0.2s ease;
+        }
+
+        .project-content.active + .arrow {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Python Scripting & Logic Portfolio</h1>
+        <p class="subtitle">A compilation of structured utilities, data validation frameworks, and routing simulations.</p>
+    </header>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>1. Medellín Metro Route Simulator (codigo Metro Medellin.py)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">Uses NetworkX and Matplotlib to find and visualize the shortest path between stations in the Medellín Metro system using Dijkstra's algorithm.</div>
+            <pre><code>import networkx as nx
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+
+G = nx.Graph()
+
+stations = [
+    "Niquía", "Bello", "Madera", "Acevedo", "Tricentenario", "Caribe", "Universidad",
+    "Hospital", "Prado", "Parque Berrío", "San Antonio", "Alpujarra", "Exposiciones",
+    "Industriales", "Poblado", "Aguacatala", "Ayurá", "Envigado", "Itagüí", "Sabaneta", "La Estrella",
+    "Cisneros", "Suramericana", "Estadio", "Floresta", "Santa Lucía", "San Javier",
+    "Andalucía", "Popular", "Santo Domingo",
+    "Juan XXIII", "Vallejuelos", "La Aurora",
+    "Arví"
+]
+
+G.add_nodes_from(stations)
+
+line_a = [
+    "Niquía", "Bello", "Madera", "Acevedo", "Tricentenario", "Caribe", "Universidad",
+    "Hospital", "Prado", "Parque Berrío", "San Antonio", "Alpujarra", "Exposiciones",
+    "Industriales", "Poblado", "Aguacatala", "Ayurá", "Envigado", "Itagüí", "Sabaneta", "La Estrella"
+]
+
+for i in range(len(line_a)-1):
+    G.add_edge(line_a[i], line_a[i+1], weight=2, line='A') 
+
+line_b = ["San Antonio", "Cisneros", "Suramericana", "Estadio", "Floresta", "Santa Lucía", "San Javier"]
+for i in range(len(line_b)-1):
+    G.add_edge(line_b[i], line_b[i+1], weight=2, line='B')
+
+line_k = ["Acevedo", "Andalucía", "Popular", "Santo Domingo"]
+for i in range(len(line_k)-1):
+    G.add_edge(line_k[i], line_k[i+1], weight=3, line='K')
+
+line_j = ["San Javier", "Juan XXIII", "Vallejuelos", "La Aurora"]
+for i in range(len(line_j)-1):
+    G.add_edge(line_j[i], line_j[i+1], weight=3, line='J')
+
+G.add_edge("Santo Domingo", "Arví", weight=8, line='L')
+G.add_edge("San Antonio", "San Antonio", weight=3)
+
+pos = {
+    "Niquía": (0, 21), "Bello": (0, 19), "Madera": (0, 17), "Acevedo": (0, 15),
+    "Tricentenario": (0, 13.5), "Caribe": (0, 12), "Universidad": (0, 10.5),
+    "Hospital": (0, 9), "Prado": (0, 7.5), "Parque Berrío": (0, 6),
+    "San Antonio": (0, 4.5), "Alpujarra": (0, 3), "Exposiciones": (0, 1.5),
+    "Industriales": (0, 0), "Poblado": (0, -2), "Aguacatala": (0, -3.5),
+    "Ayurá": (0, -5), "Envigado": (0, -6.5), "Itagüí": (0, -8),
+    "Sabaneta": (0, -9.5), "La Estrella": (0, -11),
+    "Cisneros": (-2, 4), "Suramericana": (-3.5, 3.5), "Estadio": (-5, 3),
+    "Floresta": (-6.5, 2.5), "Santa Lucía": (-8, 2), "San Javier": (-9.5, 1.5),
+    "Andalucía": (1, 16), "Popular": (2, 17), "Santo Domingo": (3, 18),
+    "Juan XXIII": (-10, 3), "Vallejuelos": (-11, 4.5), "La Aurora": (-12, 6),
+    "Arví": (6, 19)
+}
+
+def find_optimal_route(origin, destination):
+    if origin not in G or destination not in G:
+        print("Estación no encontrada. Verifica el nombre.")
+        return None, None
+
+    try:
+        path = nx.dijkstra_path(G, origin, destination, weight='weight')
+        total_time = nx.dijkstra_path_length(G, origin, destination, weight='weight')
+        
+        print(f"\n✅ Ruta más rápida de **{origin}** a **{destination}**")
+        print(f"   Estaciones: {' → '.join(path)}")
+        print(f"   Tiempo estimado: {total_time} minutos")
+        
+        plt.figure(figsize=(14, 10))
+        nx.draw_networkx_edges(G, pos, alpha=0.3, width=2)
+        nx.draw_networkx_nodes(G, pos, node_size=300, node_color='lightgray')
+        
+        path_edges = list(zip(path, path[1:]))
+        nx.draw_networkx_edges(G, pos, edgelist=path_edges, edge_color='red', width=4)
+        nx.draw_networkx_nodes(G, pos, nodelist=path, node_size=400, node_color='red')
+        nx.draw_networkx_labels(G, pos, font_size=8, font_weight='bold')
+       
+        legend_elements = [
+            Line2D([0], [0], color='blue', lw=3, label='Línea A'),
+            Line2D([0], [0], color='orange', lw=3, label='Línea B'),
+            Line2D([0], [0], color='green', lw=3, label='Cable K'),
+            Line2D([0], [0], color='purple', lw=3, label='Cable J'),
+            Line2D([0], [0], color='brown', lw=3, label='Cable L'),
+            Line2D([0], [0], color='red', lw=4, label='Ruta Óptima')
+        ]
+        plt.legend(handles=legend_elements, loc='upper right')
+        
+        plt.title(f"Ruta más rápida: {origin} → {destination} ({total_time} min)", fontsize=16)
+        plt.axis('off')
+        plt.tight_layout()
+        plt.show()
+        
+        return path, total_time
+        
+    except nx.NetworkXNoPath:
+        print("No hay ruta entre estas estaciones.")
+        return None, None
+
+if __name__ == "__main__":
+    print("🚇 Simulador de Rutas - Metro de Medellín (con NetworkX)")
+    print("Estaciones disponibles:", sorted(stations))
+    
+    while True:
+        origen = input("\nEstación de origen (o 'salir' para terminar): ").strip()
+        if origen.lower() == 'salir':
+            break
+        destino = input("Estación de destino: ").strip()
+        
+        find_optimal_route(origen, destino)
+    print("\n¡Gracias por usar el simulador de rutas del Metro de Medellín! Hasta pronto.")</code></pre>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>2. Teacher Payroll Processor (liquidacion_docente.py)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">Collects identity metrics for an arbitrary count of teachers, validates hourly rates according to system categories (A, B, C), and yields an aggregate financial summary.</div>
+            <pre><code>def validar_categoria():
+    while True:
+        cat = input("Categoría (A, B o C): ").strip().upper()
+        if cat in ['A', 'B', 'C']:
+            return cat
+        else:
+            print("❌ Error: La categoría debe ser A, B o C. Intente nuevamente.")
+
+def validar_horas():
+    while True:
+        try:
+            horas = int(input("Horas laboradas en el mes: "))
+            if horas > 0:
+                return horas
+            else:
+                print("❌ Error: Las horas deben ser mayores a 0.")
+        except ValueError:
+            print("❌ Error: Ingrese un número entero válido.")
+
+def menu_principal():
+    while True:
+        print("\n" + "="*55)
+        print("     LIQUIDACIÓN DE HONORARIOS DOCENTES")
+        print("="*55)
+        print("1. Procesar liquidación de docentes")
+        print("2. Salir")
+        print("="*55)
+        
+        opcion = input("Seleccione una opción (1-2): ").strip()
+        
+        if opcion == "1":
+            procesar_liquidacion()
+        elif opcion == "2":
+            print("\n¡Gracias por usar el sistema! Hasta pronto.")
+            break
+        else:
+            print("❌ Opción inválida. Por favor seleccione 1 o 2.")
+
+def procesar_liquidacion():
+    print("\n--- INGRESO DE DATOS DE DOCENTES ---")
+    try:
+        N = int(input("Ingrese la cantidad de docentes a procesar: "))
+        if N <= 0:
+            print("❌ Error: La cantidad debe ser mayor a 0.")
+            return
+    except ValueError:
+        print("❌ Error: Ingrese un número entero válido.")
+        return
+
+    total_pagar = 0
+    cont_A = cont_B = cont_C = 0
+
+    for i in range(1, N + 1):
+        print(f"\n📌 Docente {i} de {N}")
+        documento = input("Documento de identidad: ").strip()
+        nombre = input("Nombre completo: ").strip()
+        
+        categoria = validar_categoria()
+        horas = validar_horas()
+
+        if categoria == "A":
+            valor_hora = 25000
+            cont_A += 1
+        elif categoria == "B":
+            valor_hora = 35000
+            cont_B += 1
+        else:
+            valor_hora = 50000
+            cont_C += 1
+
+        pago_docente = valor_hora * horas
+        total_pagar += pago_docente
+
+        print(f"✅ Valor a pagar a {nombre}: ${pago_docente:,.0f}")
+
+    print("\n" + "="*60)
+    print("                   RESUMEN FINAL")
+    print("="*60)
+    print(f"Total de docentes procesados     : {N}")
+    print(f"Docentes Categoría A             : {cont_A}")
+    print(f"Docentes Categoría B             : {cont_B}")
+    print(f"Docentes Categoría C             : {cont_C}")
+    print(f"VALOR TOTAL A PAGAR              : ${total_pagar:,.0f}")
+    print("="*60)
+
+if __name__ == "__main__":
+    menu_principal()</code></pre>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>3. Logistics Zone Freight Calculator (TransporteABC.py)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">Calculates cargo shipping costs across Colombian regions, applying targeted weight-based surcharge increments and adding standard 19% IVA tax.</div>
+            <pre><code>nombre = input("Ingrese el nombre del cliente: ")
+zona = input("Ingrese la zona (Andina, Caribe, Orinoquia, Amazonica, Pacifica): ")
+peso = float(input("Ingrese el peso del paquete en kilos: "))
+
+costos = {
+    "Andina": 5000,
+    "Caribe": 7500,
+    "Orinoquia": 10000,
+    "Amazonica": 9000,
+    "Pacifica": 8500
+}
+
+costo_kilo = costos.get(zona, 0)
+subtotal = peso * costo_kilo
+incremento = 0
+
+if zona == "Andina" and peso > 10:
+    incremento = 0.05
+elif zona == "Caribe" and peso > 10:
+    incremento = 0.07
+elif zona == "Orinoquia" and peso > 10:
+    incremento = 0.10
+elif zona == "Amazonica" and peso > 10:
+    incremento = 0.15
+elif zona == "Pacifica" and peso > 10:
+    incremento = 0.125
+
+subtotal += subtotal * incremento
+iva = subtotal * 0.19
+total = subtotal + iva
+
+print("----- FACTURA -----")
+print("Cliente:", nombre)
+print("Zona:", zona)
+print("Peso:", peso)
+print("Subtotal:", subtotal)
+print("IVA (19%):", iva)
+print("Total a pagar:", total)</code></pre>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>4. Electricity Invoice Generator (EnergiaCosumo.py)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">Computes accurate electricity bills using an exact unit rate per watt (750 COP), applies social stratum discounts, and prints a structured receipt.</div>
+            <pre><code>nombre = input("Ingrese su nombre: ")
+estrato = int(input("Ingrese su estrato (1-5): "))
+consumo = int(input("Ingrese su consumo en watts: "))
+
+tarifas = {1: 80000, 2: 100000, 3: 150000, 4: 180000, 5: 200000}
+tarifa = tarifas.get(estrato, 0)
+valor_consumo = consumo * 750
+
+descuento = 0
+if estrato == 1 and consumo < 100:
+    descuento = 0.05
+elif estrato == 2 and consumo < 200:
+    descuento = 0.03
+elif estrato == 3 and consumo < 300:
+    descuento = 0.02
+elif estrato == 4 and consumo < 400:
+    descuento = 0.01
+elif estrato == 5 and consumo < 500:
+    descuento = 0.005
+
+total = valor_consumo - (valor_consumo * descuento)
+
+print("\n----- FACTURA -----")
+print("Nombre:", nombre)
+print("Estrato:", estrato)
+print("Tarifa básica:", tarifa)
+print("Valor por consumo:", valor_consumo)
+print("Descuento aplicado:", descuento * 100, "%")
+print("Total a pagar:", total)</code></pre>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>5. Electricity Base Rate Utility Calculator (EnergiaBasica.py)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">Looks up flat-rate residential electricity base fees based on social stratum (1-5) and subtracts a usage-cap discount if total consumption is low.</div>
+            <pre><code>nombre = input("Ingrese su nombre: ")
+estrato = int(input("Ingrese su estrato (1-5): "))
+consumo = int(input("Ingrese su consumo en watts: "))
+
+tarifas = {1: 10000, 2: 15000, 3: 30000, 4: 50000, 5: 65000}
+tarifa = tarifas.get(estrato, 0)
+
+descuento = 0
+if estrato == 1 and consumo < 100:
+    descuento = 0.05
+elif estrato == 2 and consumo < 200:
+    descuento = 0.03
+elif estrato == 3 and consumo < 300:
+    descuento = 0.02
+elif estrato == 4 and consumo < 400:
+    descuento = 0.01
+elif estrato == 5 and consumo < 500:
+    descuento = 0.005
+
+total = tarifa - (tarifa * descuento)
+
+print("Nombre:", nombre)
+print("Estrato:", estrato)
+print("Tarifa básica:", tarifa)
+print("Valor a pagar:", total)</code></pre>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>6. Academic Grades Average Calculator (PromediosMaterias.py)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">Computes distinct sub-weighted averages for Mathematics, Physics, and Chemistry based on custom exam/homework weights, and calculates the overall general average.</div>
+            <pre><code>exMat = float(input("Examen Matemáticas: "))
+t1 = float(input("Tarea 1 Matemáticas: "))
+t2 = float(input("Tarea 2 Matemáticas: "))
+t3 = float(input("Tarea 3 Matemáticas: "))
+
+mat = (exMat * 0.90) + ((t1 + t2 + t3) / 3 * 0.10)
+
+exFis = float(input("Examen Física: "))
+f1 = float(input("Tarea 1 Física: "))
+f2 = float(input("Tarea 2 Física: "))
+
+fis = (exFis * 0.80) + ((f1 + f2) / 2 * 0.20)
+
+exQui = float(input("Examen Química: "))
+q1 = float(input("Tarea 1 Química: "))
+q2 = float(input("Tarea 2 Química: "))
+q3 = float(input("Tarea 3 Química: "))
+
+qui = (exQui * 0.85) + ((q1 + q2 + q3) / 3 * 0.15)
+
+promedioGeneral = (mat + fis + qui) / 3
+
+print("Promedio Matemáticas:", mat)
+print("Promedio Física:", fis)
+print("Promedio Química:", qui)
+print("Promedio General:", promedioGeneral)</code></pre>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-header" onclick="toggleProject(this)">
+            <span>7. Core Logic Foundations (Short Scripts Bundle)</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="project-content">
+            <div class="meta-info">A compressed collection of foundational conditional logic exercises.</div>
+            
+            <h4 style="margin: 10px 0 5px 0;">Item Discount by Key Code (DescuentoArticulo.py)</h4>
+            <pre><code>nombre = input("Nombre del artículo: ")
+clave = int(input("Clave (1-4): "))
+precio = float(input("Precio original: "))
+cantidad = int(input("Cantidad comprada: "))
+
+if cantidad < 3:
+    print("Debe comprar mínimo 3 productos.")
+    exit()
+
+descuentos = {1: 0.05, 2: 0.10, 3: 0.15, 4: 0.20}
+descuento = descuentos.get(clave, 0)
+precioFinal = precio - (precio * descuento)
+iva = precioFinal * 0.19
+
+print("Total a pagar:", precioFinal + iva)</code></pre>
+
+            <h4 style="margin: 20px 0 5px 0;">Student Grade Approval Status (AprobacionAlumno.py)</h4>
+            <pre><code>n1 = float(input("Ingrese nota 1: "))
+n2 = float(input("Ingrese nota 2: "))
+n3 = float(input("Ingrese nota 3: "))
+promedio = (n1 + n2 + n3) / 3
+
+if promedio >= 70:
+    print("Aprobado con promedio:", promedio)
+else:
+    print("Reprobado con promedio:", promedio)</code></pre>
+
+            <h4 style="margin: 20px 0 5px 0;">Bulk Item Store Surcharge (DescuentoAlmacen.py)</h4>
+            <pre><code>valor = float(input("Ingrese el valor total de la compra: "))
+cantidad = int(input("Ingrese la cantidad de artículos: "))
+
+if valor > 250000 and cantidad >= 5:
+    total = valor - (valor * 0.20)
+else:
+    total = valor
+print("Valor final a pagar:", total)</code></pre>
+
+            <h4 style="margin: 20px 0 5px 0;">Days of the Month Evaluator (DiasMes.py)</h4>
+            <pre><code>mes = int(input("Ingrese un número entre 1 y 12: "))
+if mes in [1,3,5,7,8,10,12]:
+    print("El mes tiene 31 días")
+elif mes in [4,6,9,11]:
+    print("El mes tiene 30 días")
+elif mes == 2:
+    print("El mes tiene 28 días")
+else:
+    print("Error: número inválido")</code></pre>
+
+            <h4 style="margin: 20px 0 5px 0;">Group Tour Group Pricing (Excursion.py)</h4>
+            <pre><code>personas = int(input("Ingrese el número de personas: "))
+if personas >= 100: costo = 300000
+elif personas >= 50: costo = 325000
+elif personas >= 30: costo = 415000
+else: costo = 475000
+print("Total a pagar:", personas * costo)</code></pre>
+
+            <h4 style="margin: 20px 0 5px 0;">Bank Interest Reinvestment Alert (InteresesBasicos.py)</h4>
+            <pre><code>inversion = float(input("Ingrese la cantidad invertida: "))
+interes = inversion * 0.02
+if interes > 75000:
+    print("Reinvertirá. Total final:", inversion + interes)
+else:
+    print("No reinvierte. Interés generado:", interes)</code></pre>
+
+            <h4 style="margin: 20px 0 5px 0;">Two Number Ascending Sort (Ascendente.py)</h4>
+            <pre><code>num1 = int(input("Ingrese el primer número: "))
+num2 = int(input("Ingrese el segundo número: "))
+if num1 < num2: print(num1, num2)
+else: print(num2, num1)</code></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleProject(header) {
+        const content = header.nextElementSibling;
+        const arrow = header.querySelector('.arrow');
+        
+        content.classList.toggle('active');
+        
+        if (content.classList.contains('active')) {
+            arrow.style.transform = 'rotate(180deg)';
+        } else {
+            arrow.style.transform = 'rotate(0deg)';
+        }
+    }
+</script>
+</body>
+</html>
+
+Initial index.html creation
